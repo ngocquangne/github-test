@@ -16,10 +16,8 @@ jobs:
           username: '${{ secrets.DOCKER_USERNAME }}'
           password: '${{ secrets.DOCKER_PASSWORD }}'
       - name: Build GLPI Docker Image
-        run: >
-          docker build -t glpi:latest .  # Sử dụng tag "latest" mặc định
-
-          docker tag glpi:latest ${{ secrets.DOCKER_USERNAME }}/glpi:latest  #
-          Tag lại image cho Docker Hub
+        run: |
+          docker build -t glpi:latest .
+          docker tag glpi:latest ${{ secrets.DOCKER_USERNAME }}/glpi:latest
       - name: Push GLPI Image to Docker Hub
         run: 'docker push ${{ secrets.DOCKER_USERNAME }}/glpi:latest'
