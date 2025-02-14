@@ -29,6 +29,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Bước Pull Image từ Docker Hub
+      - name: Pull GLPI Image from Docker Hub
+        run: |
+          docker pull wannie419/glpi:${{ env.TAG }}
+
       - name: Set environment variables
         run: |
           if [ "${{ github.event.inputs.environment }}" == "production" ]; then
