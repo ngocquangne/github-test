@@ -5,7 +5,7 @@ name: Deploy GLPI
       - main
   workflow_dispatch: null
 jobs:
-  build-and-push:
+  pull-and-run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,9 +15,11 @@ jobs:
         with:
           username: '${{ secrets.DOCKER_USERNAME }}'
           password: '${{ secrets.DOCKER_PASSWORD }}'
-      - name: Build GLPI Docker Image
+      - name: Pull GLPI Image from Docker Hub
         run: |
-          docker build -t glpi:latest .
-          docker tag glpi:latest ${{ secrets.DOCKER_USERNAME }}/glpi:latest
-      - name: Push GLPI Image to Docker Hub
-        run: 'docker push ${{ secrets.DOCKER_USERNAME }}/glpi:latest'
+          docker pull wannie419/glpi:latest
+      - name: Run GLPI Container
+        run: |
+          docker stop glpi || true  # Dừng container nếu đã chạy
+          docker rm glpi || true    # Xóa container nếu đã có
+          docker run -d --name glpi -p 80:80 wannie419/glpi:latest
