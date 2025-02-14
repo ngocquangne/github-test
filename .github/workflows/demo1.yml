@@ -3,8 +3,8 @@ name: Deploy GLPI
 on:
   push:
     branches:
-      - main  # Chạy tự động khi push vào nhánh main
-  workflow_dispatch:  # Cho phép chạy thủ công
+      - main  
+  workflow_dispatch:  
 
 jobs:
   pull-and-run:
@@ -17,18 +17,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}  # Tên người dùng Docker Hub
-          password: ${{ secrets.DOCKER_PASSWORD }}  # Mật khẩu hoặc token Docker Hub
+          username: ${{ secrets.DOCKER_USERNAME }}  
+          password: ${{ secrets.DOCKER_PASSWORD }}  
 
-      - name: Pull GLPI Image
-        run: docker pull wannie419/glpi:latest  # Pull image từ Docker Hub
+     
 
-      - name: Run GLPI Container
-        uses: appleboy/ssh-action@v0.1.9
-        with:
-          host: ${{ secrets.SSH_HOST }}  # Địa chỉ server
-          username: ${{ secrets.SSH_USER }}  # Tên người dùng trên server
-          key: ${{ secrets.SSH_KEY }}  # SSH key
-          script: |
-            docker pull wannie419/glpi:latest  # Pull lại image trên server (nếu chưa có)
-            docker run -d --name glpi -p 80:80 wannie419/glpi:latest  # Chạy container GLPI
